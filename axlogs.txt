@@ -1,0 +1,102 @@
+1: fm W1XM-15 to APOT30 ctl UI pid=F0(Text) len 39
+0000  !4221.62N/07105.36Wr 05.6V 57C MIT APRS
+1: fm W1XM-15 to APOT30 ctl UI pid=F0(Text) len 39
+0000  !4221.62N/07105.36Wr 05.9V 58C MIT APRS
+1: fm W1XM-15 to APOT30 ctl UI pid=F0(Text) len 34
+0000  T#145,209,218,218,151,177,00000000
+1: fm KB1JKJ-8 to T2SP8T via W1XM* WIDE1* WIDE2-1 ctl UI pid=F0(Text) len 13
+0000  `c_fl!t(/"4<}
+1: fm KB1JKJ-8 to T2SP8T via W1XM* WIDE1* WIDE2-1 ctl UI pid=F0(Text) len 13
+0000  `c_fl!t(/"4<}
+1: fm W1XM-15 to APOT30 ctl UI pid=F0(Text) len 39
+0000  !4221.62N/07105.36Wr 06.9V 58C MIT APRS
+1: fm WJ1I-9 to TR2P5V via W1XM* WIDE1* WIDE2-1 ctl UI pid=F0(Text) len 21
+0000  `c^il!=>/'"45}!wr_!|3
+1: fm WJ1I-9 to APT314 via W1XM* WIDE1* WIDE2-1 ctl UI pid=F0(Text) len 27
+0000  >WJ1I Dave from Chatham  MA
+1: fm W1XM to APRX29 ctl UI pid=F0(Text) len 72
+0000  !4221.62NT07105.36W#PHG7570 MIT APRS iGate & Local Fill-in Cambr
+0040  idge, MA
+1: fm KB1JKJ-8 to T2SP8T via W1XM* WIDE1* WIDE2-1 ctl UI pid=F0(Text) len 13
+0000  `c_fl!t(/"4<}
+1: fm WJ1I-9 to TR2P5W via W1XM* WIDE1* WIDE2-1 ctl UI pid=F0(Text) len 21
+0000  `c^jl^E>/'"42}!wF6!|3
+1: fm WJ1I-9 to TR2P5V via W1XM* WIDE1* WIDE2-1 ctl UI pid=F0(Text) len 21
+0000  `c^ml{r>/'"40}!w(k!|3
+1: fm VE1VZ to APNU19 via W1XM* WIDE3-2 ctl UI^ pid=F0(Text) len 58
+0000  !4452.58NS06518.39W#PHG5460/W3 Bridgetown,NS MARCAN UIDIGI
+1: fm WJ1I-9 to TR2P5T via W1XM* WIDE1* WIDE2-1 ctl UI pid=F0(Text) len 21
+0000  `c^km ]>/'"40}!w6N!|3
+1: fm W1XM-15 to APOT30 ctl UI pid=F0(Text) len 39
+0000  !4221.62N/07105.36Wr 06.2V 57C MIT APRS
+1: fm WJ1I-9 to TR2P5Y via W1XM* WIDE1* WIDE2-1 ctl UI pid=F0(Text) len 21
+0000  `c^Xlf!>/'"4,}!wuT!|3
+1: fm W1XM-15 to APOT30 ctl UI pid=F0(Text) len 39
+0000  !4221.62N/07105.36Wr 05.9V 59C MIT APRS
+1: fm WJ1I-9 to TR2P9R via W1XM* WIDE1* WIDE2-1 ctl UI pid=F0(Text) len 21
+0000  `c]hmpt>/'"4,}!whr!|3
+1: fm KD1KE to APU25N via W1XM* WIDE2* WIDE2-1 ctl UI pid=F0(Text) len 92
+0000  @091808z4428.85N/06920.58W_255/002g011t075r000p000P000h30b10215W
+0040  X Station of KD1KE {UIV32N}.
+1: fm W1XM-15 to APOT30 ctl UI pid=F0(Text) len 39
+0000  !4221.62N/07105.36Wr 06.8V 57C MIT APRS
+1: fm KB1JCA to APSAR via W1XM* WIDE2* ctl UI pid=F0(Text) len 65
+0000  =4413.41N/06936.49WdWHITEFIELD FD COMMUNICATIONS[:Whitefield Fir
+0040  e
+1: fm WJ1I-9 to TR2P8X via W1XM* WIDE1* WIDE2-1 ctl UI pid=F0(Text) len 21
+0000  `c]9m6)>/'"4:}!w;M!|3
+1: fm WJ1I-9 to APT314 via W1XM* WIDE1* WIDE2-1 ctl UI pid=F0(Text) len 27
+0000  >WJ1I Dave from Chatham  MA
+1: fm W1QWT-9 to TRQT5Q via W1XM* WIDE1* WIDE2-1 ctl UIv pid=F0(Text) len 17
+0000  `bOxnpy>/`"44}_".
+1: fm W1XM to APRX29 ctl UI pid=F0(Text) len 72
+0000  !4221.62NT07105.36W#PHG7570 MIT APRS iGate & Local Fill-in Cambr
+0040  idge, MA
+1: fm W1XM-15 to APOT30 ctl UI pid=F0(Text) len 39
+0000  !4221.62N/07105.36Wr 06.3V 58C MIT APRS
+1: fm WJ1I-9 to TR2P9Y via W1XM* WIDE1* WIDE2-1 ctl UI pid=F0(Text) len 21
+0000  `c^Tq#.>/'"4%}!w'A!|3
+1: fm WJ1I-9 to TR2Q4S via W1XM* WIDE1* WIDE2-1 ctl UI pid=F0(Text) len 21
+0000  `c_2p7.>/'"4$}!w8F!|3
+1: fm WJ1I-9 to TR2Q4V via W1XM* WIDE1* WIDE2-1 ctl UI pid=F0(Text) len 21
+0000  `c_DpJc>/'"4$}!w[_!|3
+1: fm WJ1I-9 to TR2Q3X via W1XM* WIDE1* WIDE2-1 ctl UI pid=F0(Text) len 21
+0000  `c_rq6d>/'"4&}!wvO!|3
+1: fm W1XM-15 to APOT30 ctl UI pid=F0(Text) len 39
+0000  !4221.62N/07105.36Wr 06.0V 58C MIT APRS
+1: fm WJ1I-9 to TR2Q2T via W1XM* WIDE1* WIDE2-1 ctl UI pid=F0(Text) len 21
+0000  `c'lnrL>/'"4.}!w&Y!|3
+1: fm W1XM-15 to APOT30 ctl UI pid=F0(Text) len 39
+0000  !4221.62N/07105.36Wr 06.3V 58C MIT APRS
+1: fm WJ1I-9 to APT314 via W1XM* WIDE1* WIDE2-1 ctl UI pid=F0(Text) len 27
+0000  >WJ1I Dave from Chatham  MA
+1: fm WJ1I-9 to TR2P6T via W1XM* WIDE1* WIDE2-1 ctl UI pid=F0(Text) len 21
+0000  `c+ioR.>/'"4,}!w@6!|3
+1: fm KQ1L-8 to APNU19-3 via W1XM* WIDE2* ctl UI^ pid=F0(Text) len 63
+0000  !4313.42NS07041.56W#PHG3800/W3,MEn Mt.Agamenticus, Oqunquit, Me
+1: fm W1XM-15 to APOT30 ctl UI pid=F0(Text) len 39
+0000  !4221.62N/07105.36Wr 07.7V 58C MIT APRS
+1: fm W1XM to APRX29 ctl UI pid=F0(Text) len 72
+0000  !4221.62NT07105.36W#PHG7570 MIT APRS iGate & Local Fill-in Cambr
+0040  idge, MA
+1: fm W1XM-15 to APOT30 ctl UI pid=F0(Text) len 39
+0000  !4221.62N/07105.36Wr 06.3V 57C MIT APRS
+1: fm WJ1I-9 to TR2T6S via W1XM* WIDE1* WIDE2-1 ctl UI pid=F0(Text) len 21
+0000  `c+9m c>/'"4i}!wNP!|3
+1: fm N2IOF-9 to TRRP9R via W1XM* WIDE2* ctl UIv pid=F0(Text) len 26
+0000  `c=cm-2v/]"5f}446.675MHz=.
+1: fm WJ1I-9 to TR2T1R via W1XM* WIDE1* WIDE2-1 ctl UI pid=F0(Text) len 21
+0000  `c*Ll]O>/'"4s}!w-R!|3
+1: fm WJ1I-9 to TR2T0U via W1XM* WIDE1* WIDE2-1 ctl UI pid=F0(Text) len 21
+0000  `c*IlSG>/'"5,}!wD<!|3
+1: fm W1XM-15 to APOT30 ctl UI pid=F0(Text) len 39
+0000  !4221.62N/07105.36Wr 05.7V 59C MIT APRS
+1: fm WJ1I-9 to TR2T0U via W1XM* WIDE1* WIDE2-1 ctl UI pid=F0(Text) len 21
+0000  `c*Cl!>>/'"5,}!w8g!|3
+1: fm KD1KE to APU25N via W1XM* WIDE2* WIDE2-1 ctl UI pid=F0(Text) len 92
+0000  @091844z4428.85N/06920.58W_074/002g006t074r000p000P000h31b10214W
+0040  X Station of KD1KE {UIV32N}.
+1: fm W1XM-15 to APOT30 ctl UI pid=F0(Text) len 39
+0000  !4221.62N/07105.36Wr 05.9V 59C MIT APRS
+1: fm W1XM-15 to APOT30 ctl UI pid=F0(Text) len 39
+0000  !4221.62N/07105.36Wr 06.3V 58C MIT APRS
