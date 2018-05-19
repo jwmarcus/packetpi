@@ -29,12 +29,16 @@ def parse_packet(packet):
     call_path = search_except(packet, r'.*(?= ctl UI)', 0)
     origin_dest = search_except(call_path, r'[-A-Za-z0-9]+ to [-A-Za-z0-9]+', 0)
     call_path = call_path.replace(origin_dest, "").lstrip()
+    origin = search_except(origin_dest, r'[-A-Za-z0-9]+', 0)
+    destination = search_except(origin_dest, r'[-A-Za-z0-9]+ to ([-A-Za-z0-9]+)', 1)
     message = search_except(packet, r'(.*?)(len [0-9 ]+)(.*)', 3)
 
     packet_dict = {
             'call_path': call_path,
             'message': message,
-            'origin_dest': origin_dest
+            'origin_dest': origin_dest,
+            'origin': origin,
+            'destination': destination
     }
 
     return packet_dict
@@ -48,15 +52,33 @@ def main():
     for packet in packet_strings:
         packets.append(parse_packet(packet))
 
+    #while True:
+        #lcd.set_color(1.0, 0.0, 0.0)
+        #for i, packet in enumerate(packets):
+        #    lcd.clear()
+        #    lcd.message("{0:03d}".format(i) + " " + packets[i].get("origin") + '\nto  ' + packets[i].get("destination"))
+        #    time.sleep(2)
+        #time.sleep(5)
+    
+
+    # Make list of button value, text, and backlight color.
+    buttons = ( (LCD.SELECT, 0 , (1,1,1)),
+                (LCD.LEFT,   1 , (1,0,0)),
+                (LCD.UP,     2 , (0,0,1)),
+                (LCD.DOWN,   3 , (0,1,0)),
+                (LCD.RIGHT,  4 , (1,0,1)) )
+
+    lcd.set_color(1,0,0)
+
     while True:
-        lcd.set_color(1.0, 0.0, 0.0)
-        lcd.clear()
-        lcd.message(packets[3].origin_dest + '\n' + packets[3].origin_dest)
-        time.sleep(3.0)
-        lcd.set_color(0.0, 1.0, 0.0)
-        lcd.clear()
-        lcd.message('Line 3\nLine4')
-        time.sleep(3.0)
+        # Loop through each button and check if it is pressed.
+        for button in buttons:
+            if lcd.is_pressed(button[0]):
+                # Button is pressed, change the message and backlight.
+                lcd.clear()
+                # lcd.message(button[1])
+                i = button[1]
+                lcd.message("{0:03d}".format(i) + " " + packets[i].get("origin") + '\nto  ' + packets[i].get("destination"))
 
 
 if __name__ == "__main__":
