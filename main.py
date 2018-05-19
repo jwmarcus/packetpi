@@ -1,5 +1,6 @@
 import re
 import time
+import datetime
 import Adafruit_CharLCD as LCD
 
 # Initialize the LCD using the pins
@@ -68,16 +69,34 @@ def main():
                 (LCD.DOWN,   3 , (0,1,0)),
                 (LCD.RIGHT,  4 , (1,0,1)) )
 
+    seed_time = int(round(time.time()))
+    message_index = 0
+    display_page = 0
+    
     lcd.set_color(1,0,0)
 
     while True:
+        # Switch between stations and message
+        now_time = int(round(time.time()))
+        if now_time % seed_time == 4:
+            seed_time = int(round(time.time()))
+            i = message_index
+            lcd.clear()
+            display_page = 1 - display_page # Sick way of flipping bits
+            if display_page == 1:
+                lcd.message("{0:03d}".format(i) + " " + packets[i].get("origin") + '\nto  ' + packets[i].get("destination"))
+            else:    
+                lcd.message("{0:03d}".format(i) + " " + packets[i].get("message"))
+        
+
         # Loop through each button and check if it is pressed.
         for button in buttons:
             if lcd.is_pressed(button[0]):
-                # Button is pressed, change the message and backlight.
+                message_index = button[1]
+                display_page = 1
+                seed_time = int(round(time.time()))
                 lcd.clear()
-                # lcd.message(button[1])
-                i = button[1]
+                i = message_index
                 lcd.message("{0:03d}".format(i) + " " + packets[i].get("origin") + '\nto  ' + packets[i].get("destination"))
 
 
