@@ -19,8 +19,9 @@ class Adafruit_CharLCDPlate():
         os.system('clear')
 
     def message(self, message):
+        message = message[:32] if len(message) > 32 else message
         if len(message) > 16 and '\n' not in message[0:16]:
-            print(message[:16] + '\n' + message[16:32] + '\n' + message[32:])
+            print(message[:16] + '\n' + message[16:32])
         else:
             print(message)
 

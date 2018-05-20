@@ -1,6 +1,11 @@
-import re
-import time
-import Fake_Adafruit_CharLCD as LCD
+import re, time, platform
+from pprint import pprint
+import aprslib
+
+if platform.node() in ['pulsar']:
+    import Adafruit_CharLCD as LCD
+else:
+    import Fake_Adafruit_CharLCD as LCD
 
 # Initialize the LCD using the pins
 lcd = LCD.Adafruit_CharLCDPlate()
@@ -9,11 +14,10 @@ def read_packets(logfile):
     packets = []
 
     with open(logfile, 'r') as f:
-        payload = f.read().replace('\n', '')
+        payload = f.read().replace('\n','')
         packets = payload.split('1: fm ')
         if len(packets) > 0:
             packets.pop(0) # First element is always blank
-
     return packets
 
 
@@ -25,71 +29,47 @@ def search_except(payload, pattern, group_index):
 
 
 def parse_packet(packet):
-    # get entire path, then extract origin and call, then extract path:
-    call_path = search_except(packet, r'.*(?= ctl UI)', 0)
-    origin_dest = search_except(call_path, r'[-A-Za-z0-9]+ to [-A-Za-z0-9]+', 0)
-    call_path = call_path.replace(origin_dest, "").lstrip()
-    origin = search_except(origin_dest, r'[-A-Za-z0-9]+', 0)
-    destination = search_except(origin_dest, r'[-A-Za-z0-9]+ to ([-A-Za-z0-9]+)', 1)
+    parsed_packet = None
+    f_packet = format_packet(packet)
+
+    try:
+        parsed_packet = aprslib.parse(f_packet)
+    except (aprslib.exceptions.UnknownFormat):
+        print('INFO: Undecodable Message: {}'.format(f_packet))
+    return parsed_packet
+
+def format_packet(packet):
+    call_path = search_except(packet, r'^.+(?= ctl UI)', 0)
+    call_path = re.sub(r' to ', r'>', call_path)
+    call_path = re.sub(r' via ', r',', call_path)
+    call_path = re.sub(r' ', r',', call_path)
+
     message = search_except(packet, r'(.*?)(len [0-9 ]+)(.*)', 3)
+    message = re.sub(r'0[0-9]+  ', r'', message) # remove packet new lines
 
-    packet_dict = {
-            'call_path': call_path,
-            'message': message,
-            'origin_dest': origin_dest,
-            'origin': origin,
-            'destination': destination
-    }
+    return call_path + ':' + message
 
-    return packet_dict
-
+def get_lcd_message(packet_dict, index):
+    lcd_message = packet_dict.get('from')
+    lcd_message += ">"
+    lcd_message += packet_dict.get('to')
+    lcd_message += '\n'
+    lcd_message += packet_dict.get('comment', '')
+    return lcd_message
 
 def main():
     ax_log = "./axlogs.txt"
-    packets = [] # Packets ordered same as log file
 
+    packets = [] # Packets ordered same as log file
     packet_strings = read_packets(ax_log)
     for packet in packet_strings:
-        packets.append(parse_packet(packet))
+        if (parse_packet(packet) is not None):
+            packets.append(parse_packet(packet))
 
-    # Make list of button value, text, and backlight color.
-    buttons = ( (LCD.SELECT, 0 , (1,1,1)),
-                (LCD.LEFT,   1 , (1,0,0)),
-                (LCD.UP,     2 , (0,0,1)),
-                (LCD.DOWN,   3 , (0,1,0)),
-                (LCD.RIGHT,  4 , (1,0,1)) )
-
-    lcd.set_color(1,0,0)
-    lcd.clear()
-
-    seed_time = int(round(time.time()))
-    message_index = 0
-    display_page = 0
-
-    while True:
-        # Switch between stations and message
-        now_time = int(round(time.time()))
-        if now_time % seed_time == 4:
-            seed_time = int(round(time.time()))
-            i = message_index
-            lcd.clear()
-            display_page = 1 - display_page # Sick way of flipping bits
-            if display_page == 1:
-                lcd.message("{0:03d}".format(i) + " " + packets[i].get("origin") + '\nto  ' + packets[i].get("destination"))
-            else:
-                lcd.message("{0:03d}".format(i) + " " + packets[i].get("message"))
-
-
-        # Loop through each button and check if it is pressed.
-        for button in buttons:
-            if lcd.is_pressed(button[0]):
-                message_index = button[1]
-                display_page = 1
-                seed_time = int(round(time.time()))
-                lcd.clear()
-                i = message_index
-                lcd.message("{0:03d}".format(i) + " " + packets[i].get("origin") + '\nto  ' + packets[i].get("destination"))
-                time.sleep(0.25)
+    for index, packet in enumerate(packets):
+        lcd.clear()
+        lcd.message(get_lcd_message(packet, index))
+        time.sleep(3)
 
 if __name__ == "__main__":
     main()
