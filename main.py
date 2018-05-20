@@ -1,7 +1,6 @@
 import re
 import time
-import datetime
-import Adafruit_CharLCD as LCD
+import Fake_Adafruit_CharLCD as LCD
 
 # Initialize the LCD using the pins
 lcd = LCD.Adafruit_CharLCDPlate()
@@ -53,15 +52,6 @@ def main():
     for packet in packet_strings:
         packets.append(parse_packet(packet))
 
-    #while True:
-        #lcd.set_color(1.0, 0.0, 0.0)
-        #for i, packet in enumerate(packets):
-        #    lcd.clear()
-        #    lcd.message("{0:03d}".format(i) + " " + packets[i].get("origin") + '\nto  ' + packets[i].get("destination"))
-        #    time.sleep(2)
-        #time.sleep(5)
-    
-
     # Make list of button value, text, and backlight color.
     buttons = ( (LCD.SELECT, 0 , (1,1,1)),
                 (LCD.LEFT,   1 , (1,0,0)),
@@ -69,11 +59,12 @@ def main():
                 (LCD.DOWN,   3 , (0,1,0)),
                 (LCD.RIGHT,  4 , (1,0,1)) )
 
+    lcd.set_color(1,0,0)
+    lcd.clear()
+
     seed_time = int(round(time.time()))
     message_index = 0
     display_page = 0
-    
-    lcd.set_color(1,0,0)
 
     while True:
         # Switch between stations and message
@@ -85,9 +76,9 @@ def main():
             display_page = 1 - display_page # Sick way of flipping bits
             if display_page == 1:
                 lcd.message("{0:03d}".format(i) + " " + packets[i].get("origin") + '\nto  ' + packets[i].get("destination"))
-            else:    
+            else:
                 lcd.message("{0:03d}".format(i) + " " + packets[i].get("message"))
-        
+
 
         # Loop through each button and check if it is pressed.
         for button in buttons:
@@ -98,7 +89,7 @@ def main():
                 lcd.clear()
                 i = message_index
                 lcd.message("{0:03d}".format(i) + " " + packets[i].get("origin") + '\nto  ' + packets[i].get("destination"))
-
+                time.sleep(0.25)
 
 if __name__ == "__main__":
     main()
