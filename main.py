@@ -57,14 +57,26 @@ def get_lcd_message(packet_dict, index):
     lcd_message += packet_dict.get('comment', '')
     return lcd_message
 
-def main():
+def refresh_packets():
     ax_log = "./axlogs.txt"
-
     packets = [] # Packets ordered same as log file
+
     packet_strings = read_packets(ax_log)
     for packet in packet_strings:
         if (parse_packet(packet) is not None):
             packets.append(parse_packet(packet))
+    return packets
+
+
+def main():
+    time_now = int(round(time.time()))
+
+    # every x seconds check for new packets and update packet table
+    # every x seconds flip display between page1 and page2
+    # contunuously check for a button press, debounce every 0.25sec
+
+    # Demo reel for all packets parsed
+    packets = refresh_packets()
 
     for index, packet in enumerate(packets):
         lcd.clear()
