@@ -2,6 +2,7 @@ import re, time, platform
 from pprint import pprint
 import aprslib
 
+# Run in "Fake" mode when not on the actual Raspberry Pi
 if platform.node() in ['pulsar']:
     import Adafruit_CharLCD as LCD
 else:
