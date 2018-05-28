@@ -8,6 +8,15 @@ if platform.node() in ['pulsar']:
 else:
     import Fake_Adafruit_CharLCD as LCD
 
+# Define some Menu indexes
+MENU_POS = 0
+MENU_CMT = 1
+MENU_SPD = 2
+
+MENU_OPTIONS = [{'text': "POS"},
+                {'text': "CMT"},
+                {'text': "SPD"}]
+
 # Initialize the LCD using the pins
 lcd = LCD.Adafruit_CharLCDPlate()
 
@@ -50,13 +59,42 @@ def format_packet(packet):
 
     return call_path + ':' + message
 
-def get_lcd_message(packet_dict, index):
-    lcd_message = packet_dict.get('from')
-    lcd_message += ">"
-    lcd_message += packet_dict.get('to')
+def get_lcd_message(packet, index, screen_type):
+    lcd_message = str(index).zfill(2)
+    lcd_message += "-" + MENU_OPTIONS[screen_type].get('text')
+    lcd_message += ":" + packet.get('from')
     lcd_message += '\n'
-    lcd_message += packet_dict.get('comment', '')
+
+    if screen_type is MENU_POS:
+        lcd_message += format_lat_long(
+            packet.get('latitude', 0.),
+            packet.get('longitude', 0.)
+        )
+    elif screen_type is MENU_CMT:
+        lcd_message += packet.get('comment', '')[0:20]
+    elif screen_type is MENU_SPD:
+        lcd_message += format_speed_course(
+            packet.get('speed', 0.),
+            packet.get('course', 0.)
+        )
+
     return lcd_message
+
+def format_lat_long(lat, long):
+    pos_ns = "n" if lat >= 0 else "s"
+    pos_we = "w" if long <= 0 else "e"
+    deg_lat = "{:.0f}".format(abs(lat)).zfill(2)
+    deg_long = "{:.0f}".format(abs(long)).zfill(3)
+    dec_lat = "{:0.4f}".format(lat % 1)[2:]
+    dec_long = "{:0.4f}".format(long % 1)[2:]
+    combined_lat_long = deg_lat + pos_ns + dec_lat + ":"
+    combined_lat_long += deg_long + pos_we + dec_long
+
+    return combined_lat_long
+
+def format_speed_course(speed, course):
+    # TODO: Figure this out
+    return "GO FAST!!!"
 
 def refresh_packets():
     ax_log = "./axlogs.txt"
@@ -70,19 +108,17 @@ def refresh_packets():
 
 
 def main():
-    time_now = int(round(time.time()))
-
     # every x seconds check for new packets and update packet table
     # every x seconds flip display between page1 and page2
     # contunuously check for a button press, debounce every 0.25sec
 
-    # Demo reel for all packets parsed
     packets = refresh_packets()
 
     for index, packet in enumerate(packets):
-        lcd.clear()
-        lcd.message(get_lcd_message(packet, index))
-        time.sleep(3)
+        for message_type in [MENU_POS, MENU_CMT, MENU_SPD]:
+            lcd.clear()
+            lcd.message(get_lcd_message(packet, index, message_type))
+            time.sleep(3)
 
 if __name__ == "__main__":
     main()
