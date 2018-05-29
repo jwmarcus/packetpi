@@ -71,7 +71,7 @@ def get_lcd_message(packet, index, screen_type):
             packet.get('longitude', 0.)
         )
     elif screen_type is MENU_CMT:
-        lcd_message += packet.get('comment', '')[0:20]
+        lcd_message += packet.get('comment', '')[0:16]
     elif screen_type is MENU_SPD:
         lcd_message += format_speed_course(
             packet.get('speed', 0.),
@@ -93,8 +93,11 @@ def format_lat_long(lat, long):
     return combined_lat_long
 
 def format_speed_course(speed, course):
-    # TODO: Figure this out
-    return "GO FAST!!!"
+    combined_speed_course = "SPD:"
+    combined_speed_course += "{:.1f}".format(speed).zfill(4)
+    combined_speed_course += "-CSE:"
+    combined_speed_course += "{:.0f}".format(course).zfill(3)
+    return combined_speed_course
 
 def refresh_packets():
     ax_log = "./axlogs.txt"
@@ -115,10 +118,10 @@ def main():
     packets = refresh_packets()
 
     for index, packet in enumerate(packets):
-        for message_type in [MENU_POS, MENU_CMT, MENU_SPD]:
+        for message_type in [MENU_SPD]: # MENU_POS, MENU_CMT,
             lcd.clear()
             lcd.message(get_lcd_message(packet, index, message_type))
-            time.sleep(3)
+            time.sleep(2)
 
 if __name__ == "__main__":
     main()
