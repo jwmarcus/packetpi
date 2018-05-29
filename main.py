@@ -3,7 +3,7 @@ import aprslib
 
 log_file = "./axlogs.txt"
 
-def setup_aprs_listener():
+def setup_aprs_listener(log_file):
     # Kill everything before
     os.system("sudo killall kissattach")
     os.system("sudo killall axlisten")
@@ -12,16 +12,21 @@ def setup_aprs_listener():
     os.system("sudo kissattach /dev/ttyAMA0 1")
     time.sleep(1)
 
-    #start a log to send things to
+    # Start a log to send things to
+    # Axlisten collapses after the program terminates,
+    # so above killall is, ahem, overkill.
     os.system("sudo axlisten -a > aprslogs.txt &")
     log_file = "./aprslogs.txt"
+    print(log_file)
 
 # Run in "Fake" mode when not on the actual Raspberry Pi
 if platform.node() in ['pulsar']:
     import Adafruit_CharLCD as LCD
-    setup_aprs_listener()
+    setup_aprs_listener(log_file)
 else:
     import Fake_Adafruit_CharLCD as LCD
+
+print log_file
 
 # Define some Menu indexes
 MENU_POS = 0
