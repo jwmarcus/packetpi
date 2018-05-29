@@ -1,7 +1,7 @@
 import re, os, time, platform
 import aprslib
 
-log_file = "./axlogs.txt"
+log_file = "./axlogs.txt" # default log file
 
 def setup_aprs_listener(log_file):
     # Kill everything before
@@ -17,16 +17,15 @@ def setup_aprs_listener(log_file):
     # so above killall is, ahem, overkill.
     os.system("sudo axlisten -a > aprslogs.txt &")
     log_file = "./aprslogs.txt"
-    print(log_file)
+    # log_file = "./axlogs.txt" # default test logs
+    return log_file
 
 # Run in "Fake" mode when not on the actual Raspberry Pi
 if platform.node() in ['pulsar']:
     import Adafruit_CharLCD as LCD
-    setup_aprs_listener(log_file)
+    log_file = setup_aprs_listener(log_file)
 else:
     import Fake_Adafruit_CharLCD as LCD
-
-print log_file
 
 # Define some Menu indexes
 MENU_POS = 0
@@ -213,7 +212,7 @@ def main():
             packets = refresh_packets()
             if len(packets) > last_pack_len:
                 last_pack_len = len(packets)
-                blink_alert(lcd, ((1,0,0)), ((0,1,0)), 2, 0.25)
+                blink_alert(lcd, ((1,0,0)), ((0,1,0)), 10, 0.25)
 
 
 if __name__ == "__main__":
