@@ -1,10 +1,25 @@
-import re, time, platform
-from pprint import pprint
+import re, os, time, platform
 import aprslib
+
+log_file = "./axlogs.txt"
+
+def setup_aprs_listener():
+    # Kill everything before
+    os.system("killall kissattach")
+    os.system("killall axlisten")
+
+    # Attach the post to listen from and chill for a sec
+    os.system("kissattach /dev/ttyAMA0 1")
+    time.sleep(1)
+
+    #start a log to send things to
+    os.system("axlisten -a > aprslogs.txt &")
+    log_file = "./aprslogs.txt"
 
 # Run in "Fake" mode when not on the actual Raspberry Pi
 if platform.node() in ['pulsar']:
     import Adafruit_CharLCD as LCD
+    setup_aprs_listener()
 else:
     import Fake_Adafruit_CharLCD as LCD
 
@@ -24,7 +39,6 @@ LCD_BUTTONS = ((LCD.SELECT, 0, (1,1,1)),
                (LCD.UP,     2, (0,0,1)),
                (LCD.DOWN,   3, (0,1,0)),
                (LCD.RIGHT,  4, (1,0,1)))
-
 
 def read_packets(logfile):
     packets = []
@@ -115,7 +129,7 @@ def format_speed_course(speed, course):
     return combined_speed_course
 
 def refresh_packets():
-    ax_log = "./blanklog.txt"
+    ax_log = log_file
     packets = [] # Packets ordered same as log file
 
     packet_strings = read_packets(ax_log)
