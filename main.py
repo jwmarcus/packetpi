@@ -88,6 +88,8 @@ def get_lcd_message(packet, index, screen_type):
     return lcd_message
 
 def update_lcd(packet, index, screen_type, lcd):
+
+
     formatted_message = get_lcd_message(packet, index, screen_type)
     lcd.clear()
     lcd.message(formatted_message)
@@ -107,13 +109,13 @@ def format_lat_long(lat, long):
 
 def format_speed_course(speed, course):
     combined_speed_course = "SPD:"
-    combined_speed_course += "{:.1f}".format(speed).zfill(4)
-    combined_speed_course += "-CSE:"
+    combined_speed_course += "{:.0f}".format(speed).zfill(3)
+    combined_speed_course += "--CSE:"
     combined_speed_course += "{:.0f}".format(course).zfill(3)
     return combined_speed_course
 
 def refresh_packets():
-    ax_log = "./axlogs.txt"
+    ax_log = "./blanklog.txt"
     packets = [] # Packets ordered same as log file
 
     packet_strings = read_packets(ax_log)
@@ -130,6 +132,9 @@ def get_button(lcd):
     return button_num
 
 def update_indexes(button_num, packet_index, page_index, packet_len, page_len):
+    if packet_len is 0 or page_len is 0: # Bail out with empty lists
+        return (packet_index, page_index)
+
     if button_num is LCD.UP:
         packet_index = (packet_index + 1) % packet_len
     elif button_num is LCD.DOWN:
@@ -138,6 +143,7 @@ def update_indexes(button_num, packet_index, page_index, packet_len, page_len):
         page_index = (page_index + 1) % page_len
     elif button_num is LCD.LEFT:
         page_index = (page_index - 1) % page_len
+
     return (packet_index, page_index)
 
 def blink_alert(lcd, color1, color2, iterations, speed):
@@ -154,12 +160,17 @@ def main():
     # Get first packets
     packets = refresh_packets()
 
+    # TODO: Setup and tear down message queue from python
 
     # Menu system
     packet_index = 0 # Index of which message to display
     page_index = 0   # Index of which page of data to dispay
     refresh_rate = 6
     start_time = int(round(time.time()))
+
+    # Put first message on screen
+    if len(packets) > 0:
+        update_lcd(packets[packet_index], packet_index, SCREEN_TYPES[page_index], lcd)
 
     while True:
         # Constantly check for button events
@@ -172,7 +183,8 @@ def main():
                     len(packets),
                     len(SCREEN_TYPES)
             )
-            update_lcd(packets[packet_index], packet_index, SCREEN_TYPES[page_index], lcd)
+            if len(packets) > 0:
+                update_lcd(packets[packet_index], packet_index, SCREEN_TYPES[page_index], lcd)
 
         # Refresh the display every refresh_rate seconds
         current_time = int(round(time.time()))
@@ -182,7 +194,7 @@ def main():
             packets = refresh_packets()
             if len(packets) > last_pack_len:
                 last_pack_len = len(packets)
-            blink_alert(lcd, ((1,0,0)), ((0,1,0)), 2, 0.25)
+                blink_alert(lcd, ((1,0,0)), ((0,1,0)), 2, 0.25)
 
 
 if __name__ == "__main__":
