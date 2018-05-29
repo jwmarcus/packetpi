@@ -5,15 +5,15 @@ log_file = "./axlogs.txt"
 
 def setup_aprs_listener():
     # Kill everything before
-    os.system("killall kissattach")
-    os.system("killall axlisten")
+    os.system("sudo killall kissattach")
+    os.system("sudo killall axlisten")
 
     # Attach the post to listen from and chill for a sec
-    os.system("kissattach /dev/ttyAMA0 1")
+    os.system("sudo kissattach /dev/ttyAMA0 1")
     time.sleep(1)
 
     #start a log to send things to
-    os.system("axlisten -a > aprslogs.txt &")
+    os.system("sudo axlisten -a > aprslogs.txt &")
     log_file = "./aprslogs.txt"
 
 # Run in "Fake" mode when not on the actual Raspberry Pi
