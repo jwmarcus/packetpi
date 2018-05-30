@@ -111,7 +111,7 @@ def update_lcd(packet, index, screen_type, lcd):
     formatted_message = get_lcd_message(packet, index, screen_type)
     lcd.clear()
     lcd.message(formatted_message)
-    time.sleep(0.15) # slight de-bounce?
+    time.sleep(0.15) # slight de-bounce
 
 def format_lat_long(lat, long):
     pos_ns = "n" if lat >= 0 else "s"
@@ -178,8 +178,6 @@ def main():
     # Get first packets
     packets = refresh_packets()
 
-    # TODO: Setup and tear down message queue from python
-
     # Menu system
     packet_index = 0 # Index of which message to display
     page_index = 0   # Index of which page of data to dispay
@@ -206,10 +204,11 @@ def main():
 
         # Refresh the display every refresh_rate seconds
         current_time = int(round(time.time()))
-        if current_time % start_time == 4:
+        if current_time % start_time >= 4:
             start_time = current_time
             last_pack_len = len(packets)
             packets = refresh_packets()
+            print("{} - {}".format(last_pack_len, len(packets)))
             if len(packets) > last_pack_len:
                 last_pack_len = len(packets)
                 blink_alert(lcd, ((1,0,0)), ((0,1,0)), 10, 0.25)
