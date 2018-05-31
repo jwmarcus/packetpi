@@ -28,15 +28,17 @@ else:
     import Fake_Adafruit_CharLCD as LCD
 
 # Define some Menu indexes
-MENU_POS = 0
-MENU_CMT = 1
-MENU_SPD = 2
+MENU_POS  = 0
+MENU_CMT  = 1
+MENU_SPD  = 2
+MENU_PATH = 3
 
-SCREEN_TYPES = [MENU_POS, MENU_CMT, MENU_SPD]
+SCREEN_TYPES = [MENU_POS, MENU_CMT, MENU_SPD, MENU_PATH]
 
 MENU_OPTIONS = [{'text': "POS"},
                 {'text': "CMT"},
-                {'text': "SPD"}]
+                {'text': "SPD"},
+                {'text': "PTH"}]
 
 LCD_BUTTONS = ((LCD.SELECT, 0, (1,1,1)),
                (LCD.LEFT,   1, (1,0,0)),
@@ -102,6 +104,8 @@ def get_lcd_message(packet, index, screen_type):
             packet.get('speed', 0.),
             packet.get('course', 0.)
         )
+    elif screen_type is MENU_PATH:
+        lcd_message += format_path(packet.get('path', ''))
 
     return lcd_message
 
@@ -131,6 +135,9 @@ def format_speed_course(speed, course):
     combined_speed_course += "--CSE:"
     combined_speed_course += "{:.0f}".format(course).zfill(3)
     return combined_speed_course
+
+def format_path(path):
+    return ",".join(path)[0:16] if len(path) > 0 else ""
 
 def refresh_packets():
     ax_log = log_file
