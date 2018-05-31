@@ -208,7 +208,6 @@ def main():
             start_time = current_time
             last_pack_len = len(packets)
             packets = refresh_packets()
-            print("{} - {}".format(last_pack_len, len(packets)))
             if len(packets) > last_pack_len:
                 last_pack_len = len(packets)
                 blink_alert(lcd, ((1,0,0)), ((0,1,0)), 10, 0.25)
