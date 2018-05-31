@@ -122,8 +122,8 @@ def format_lat_long(lat, long):
     pos_we = "w" if long <= 0 else "e"
     deg_lat = "{:.0f}".format(abs(lat)).zfill(2)
     deg_long = "{:.0f}".format(abs(long)).zfill(3)
-    dec_lat = "{:0.4f}".format(abs(lat))[2:]
-    dec_long = "{:0.4f}".format(abs(long))[2:]
+    dec_lat = "{:0.4f}".format(abs(lat))[3:]
+    dec_long = "{:0.4f}".format(abs(long))[3:]
     combined_lat_long = deg_lat + pos_ns + dec_lat + ":"
     combined_lat_long += deg_long + pos_we + dec_long
 
