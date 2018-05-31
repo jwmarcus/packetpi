@@ -1,0 +1,8 @@
+[Unit]
+Description=AX.25 listener and LCD menu system
+
+[Service]
+ExecStart=/usr/bin/bash -c 'cd /home/pi/dev/src/packetpi; source env/bin/activate; python3 main.py'
+
+[Install]
+WantedBy=multi-user.target
