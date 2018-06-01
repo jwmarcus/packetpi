@@ -137,7 +137,10 @@ def format_speed_course(speed, course):
     return combined_speed_course
 
 def format_path(path):
-    return ",".join(path)[0:16] if len(path) > 0 else ""
+    path_str = ""
+    for path_node in path:
+        path_str += re.sub(r'WIDE', r'W', path_node)
+    return path_str[0:20]
 
 def refresh_packets():
     ax_log = log_file
