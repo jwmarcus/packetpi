@@ -110,8 +110,6 @@ def get_lcd_message(packet, index, screen_type):
     return lcd_message
 
 def update_lcd(packet, index, screen_type, lcd):
-
-
     formatted_message = get_lcd_message(packet, index, screen_type)
     lcd.clear()
     lcd.message(formatted_message)
@@ -120,8 +118,8 @@ def update_lcd(packet, index, screen_type, lcd):
 def format_lat_long(lat, long):
     pos_ns = "n" if lat >= 0 else "s"
     pos_we = "w" if long <= 0 else "e"
-    deg_lat = "{:.0f}".format(abs(lat)).zfill(2)
-    deg_long = "{:.0f}".format(abs(long)).zfill(3)
+    deg_lat = "{:.0f}".format(abs(int(lat))).zfill(2)
+    deg_long = "{:.0f}".format(abs(int(long))).zfill(3)
     dec_lat = "{:0.4f}".format(abs(lat))[3:]
     dec_long = "{:0.4f}".format(abs(long))[3:]
     combined_lat_long = deg_lat + pos_ns + dec_lat + ":"
