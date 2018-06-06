@@ -1,0 +1,67 @@
+## Look for basic signal activity on the port:
+
+stty -F /dev/ttyUSB0 ispeed 4800 && cat < /dev/ttyUSB0
+
+Should yield:
+
+```
+$GPGGA,235043.000,4222.0902,N,07104.9179,W,1,07,1.5,25.2,M,-33.7,M,,0000*58
+
+$GPGSA,M,3,02,05,06,12,19,09,17,,,,,,3.0,1.5,2.6*38
+
+$GPRMC,235043.000,A,4222.0902,N,07104.9179,W,0.00,0.00,050618,,,A*7C
+
+$GPGGA,235044.000,4222.0902,N,07104.9179,W,1,07,1.5,25.2,M,-33.7,M,,0000*5F
+
+$GPGSA,M,3,02,05,06,12,19,09,17,,,,,,3.0,1.5,2.6*38
+```
+
+Next, modify the gpsd daemon:
+
+```
+# Default settings for the gpsd init script and the hotplug wrapper.
+
+# Start the gpsd daemon automatically at boot time
+START_DAEMON="true"
+
+# Use USB hotplugging to add new USB devices automatically to the daemon
+# USBAUTO="true"
+USBAUTO="false"
+
+# Devices gpsd should collect to at boot time.
+# They need to be read/writeable, either by user gpsd or the group dialout.
+# DEVICES=""
+DEVICES="/dev/ttyUSB0"
+
+# Other options you want to pass to gpsd
+GPSD_OPTIONaS=""
+
+# New Option
+GPSD_SOCKET="/var/run/gpsd.sock"
+
+```
+
+Then go ahead and try to telnet to the local server:
+
+`telnet localhost 2947`
+
+And send in these parameters:
+
+`?WATCH={"enable":true,"json":true};`
+
+And it should yield:
+
+`{"PRN":19,"el":24,"az":142,"ss":24,"used":true},{"PRN":29,"el":18,"az":315,"ss":20,"used":true},{"PRN":25,"el":25,"az":283,"ss":0,"used":false},{"PRN":4,"el":7,"az":78,"ss":0,"used":false},{"PRN":13,"el":4,"az":175,"ss":0,"used":false},{"PRN":135,"el":13,"az":247,"ss":0,"used":false}]}`
+
+If things are running well, then you can run `xgps` and get your GPS map if you're running `X`.
+
+# Running from the command line:
+
+I have yet to get this to work:
+
+`gpsd -D 5 -N -n /dev/ttyUSB0` based on:
+
+- -D 5 (debug level 5)
+- -N Don't run in daemon, run in foreground
+- -n don't wait for client to connect before polling (for some gps hardware)
+- /dev/ttyUSB0 Port to connect on
