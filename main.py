@@ -38,6 +38,7 @@ def main():
             packets = agate.get_packets()
             if len(packets) > last_pack_len:
                 menu.blink_alert(lcd, ((1,0,0)), ((0,1,0)), 10, 0.25)
+                menu.update_lcd(packets, lcd)
 
 
 if __name__ == "__main__":
