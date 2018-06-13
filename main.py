@@ -1,4 +1,4 @@
-import re, time, platform
+import time, platform
 from APRSGate import APRSGate
 from PacketMenu import PacketMenu
 
@@ -20,7 +20,6 @@ def main():
     # Initialize the LCD
     lcd = LCD.Adafruit_CharLCDPlate()
     lcd.set_color(1, 0, 0)
-    start_time = int(round(time.time()))
 
     # Create a menu
     menu = PacketMenu()
@@ -33,13 +32,11 @@ def main():
             menu.update_lcd(packets, lcd)
 
         # Refresh the display every refresh_rate seconds
-        current_time = int(round(time.time()))
-        if current_time % start_time >= 4:
-            start_time = current_time
+        if menu.time_for_update(4):
+            menu.update_time()
             last_pack_len = len(packets)
             packets = agate.get_packets()
             if len(packets) > last_pack_len:
-                last_pack_len = len(packets)
                 menu.blink_alert(lcd, ((1,0,0)), ((0,1,0)), 10, 0.25)
 
 

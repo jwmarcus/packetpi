@@ -26,8 +26,16 @@ class PacketMenu:
     packet_index = 0 # Index of which message to display
     page_index = 0   # Index of which page of data to dispay
     refresh_rate = 6
-    start_time = int(round(time.time()))
+    start_time = None
 
+    def __init__(self):
+        self.update_time()
+
+    def update_time(self):
+        self.start_time = int(round(time.time()))
+
+    def time_for_update(self, refresh_rate):
+        return (int(round(time.time())) % self.start_time) >= refresh_rate
 
     def update_lcd(self, packets, lcd):
         if len(packets) == 0:
