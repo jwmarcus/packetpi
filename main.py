@@ -1,6 +1,7 @@
 import time, platform
 from APRSGate import APRSGate
 from PacketMenu import PacketMenu
+from GPSMouse import GPSMouse
 
 # Does this machine have physical hardware?
 hw_nodes = ['pulsar']
@@ -21,6 +22,9 @@ def main():
     lcd = LCD.Adafruit_CharLCDPlate()
     lcd.set_color(1, 0, 0)
 
+    # Initialize the GPS
+    gps = GPSMouse()
+
     # Create a menu
     menu = PacketMenu()
 
@@ -39,6 +43,9 @@ def main():
             if len(packets) > last_pack_len:
                 menu.blink_alert(lcd, ((1,0,0)), ((0,1,0)), 10, 0.25)
                 menu.update_lcd(packets, lcd)
+
+            # Also update the GPS coorinates
+            menu.update_location(gps.read_position())
 
 
 if __name__ == "__main__":

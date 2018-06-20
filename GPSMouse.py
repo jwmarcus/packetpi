@@ -1,41 +1,33 @@
 import os, time
-from gps3 import gps3
+from gps3.agps3threaded import AGPS3mechanism
 
 class GPSMouse:
     'Base class for interacting with a USB GPS'
 
-    gps_socket = None
-    data_stream = None
+    agps_thread = None
 
-    def __init__(self, port):
+    def __init__(self, port='/dev/ttyUSB0'):
         # Kill everything that might be using gpsd
         os.system("killall gpsd")
         time.sleep(1)
-
-        # Start gpsd
         os.system("gpsd {}".format(port))
         time.sleep(1)
 
         # The socket takes care of HW interaction, we read from the stream
-        self.gps_socket = gps3.GPSDSocket()
-        self.data_stream = gps3.DataStream()
-        self.gps_socket.connect()
-        self.gps_socket.watch()
+        self.agps_thread = AGPS3mechanism()
+        self.agps_thread.stream_data()
+        self.agps_thread.run_thread()
 
-    def read_position(self, options):
+    def read_position(self):
         # TODO: typecheck all the elements and replace "n/a"'s with something useful
-        # TODO: Have this no block when there is no data
-        data = None
-        for new_data in self.gps_socket:
-            if new_data:
-                data = self.data_stream.unpack(new_data)
-        return data
+        return dir(self.agps_thread.data_stream)
 
-def main():
-    gpsm = GPSMouse('/dev/ttyUSB0')
-    pos = gpsm.read_position(None)
-    print(pos)
-
-
-if __name__ == "__main__":
-    main()
+# def main():
+#     gpsm = GPSMouse('/dev/ttyUSB0')
+#     while True:
+#         pos = gpsm.read_position()
+#         print(pos)
+#         time.sleep(0.2)
+#
+# if __name__ == "__main__":
+#     main()
