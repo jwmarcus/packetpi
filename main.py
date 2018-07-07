@@ -32,7 +32,7 @@ def main():
         # Poll the switches on LCD board
         button_num = menu.get_button(lcd)
         if button_num is not None:
-            menu.update_indexes(button_num, len(packets))
+            menu.update_indexes(button_num, packets)
             menu.update_lcd(packets, lcd)
 
         # Refresh the display every refresh_rate seconds
@@ -45,7 +45,7 @@ def main():
                 menu.update_lcd(packets, lcd)
 
             # Also update the GPS coorinates
-            menu.update_location(gps.read_position())
+            menu.update_position(gps.read_position())
 
 
 if __name__ == "__main__":

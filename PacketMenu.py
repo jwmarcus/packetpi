@@ -14,7 +14,11 @@ class PacketMenu:
     LCD_UP        = 3
     LCD_LEFT      = 4
 
+    MENU_TYPE_VIEWER = 0
+    MENU_TYPE_INFO   = 1
+
     SCREEN_TYPES = [MENU_POS, MENU_CMT, MENU_SPD, MENU_PATH]
+    MENU_TYPES = [MENU_TYPE_VIEWER, MENU_TYPE_INFO]
     LCD_BUTTONS = [LCD_SELECT, LCD_RIGHT, LCD_DOWN, LCD_UP, LCD_LEFT]
 
     MENU_OPTIONS = [{'text': "POS"},
@@ -22,11 +26,14 @@ class PacketMenu:
                     {'text': "SPD"},
                     {'text': "PTH"}]
 
+
     # Menu system
     packet_index = 0 # Index of which message to display
-    page_index = 0   # Index of which page of data to dispay
+    page_index = MENU_POS   # Index of which page of data to dispay
+    menu_index = MENU_TYPE_VIEWER
     refresh_rate = 6
     start_time = None
+    gps_position = None
 
     def __init__(self):
         self.update_time()
@@ -38,37 +45,40 @@ class PacketMenu:
         return (int(round(time.time())) % self.start_time) >= refresh_rate
 
     def update_lcd(self, packets, lcd):
-        if len(packets) == 0:
-            return
         formatted_message = self.get_lcd_message(
-                packets[self.packet_index],
+                packets[self.packet_index] if len(packets) is not 0 else None,
                 self.packet_index,
-                self.page_index)
+                self.page_index,
+                self.menu_index)
         lcd.clear()
         lcd.message(formatted_message)
         time.sleep(0.15) # slight de-bounce
 
-    def get_lcd_message(self, packet, packet_index, page_index):
-        lcd_message = str(packet_index).zfill(2)
-        lcd_message += "-" + self.MENU_OPTIONS[page_index].get('text')
-        lcd_message += ":" + packet.get('from')
-        lcd_message += '\n'
+    def get_lcd_message(self, packet, packet_index, page_index, menu_type):
+        lcd_message = ""
 
-        if page_index is self.MENU_POS:
-            lcd_message += self.format_lat_long(
-                packet.get('latitude', 0.),
-                packet.get('longitude', 0.)
-            )
-        elif page_index is self.MENU_CMT:
-            lcd_message += packet.get('comment', '')[0:16]
-        elif page_index is self.MENU_SPD:
-            lcd_message += self.format_speed_course(
-                packet.get('speed', 0.),
-                packet.get('course', 0.)
-            )
-        elif page_index is self.MENU_PATH:
-            lcd_message += self.format_path(packet.get('path', ''))
+        if menu_type is self.MENU_TYPE_VIEWER and packet is not None:
+            lcd_message += str(packet_index).zfill(2)
+            lcd_message += "-" + self.MENU_OPTIONS[page_index].get('text')
+            lcd_message += ":" + packet.get('from')
+            lcd_message += '\n'
 
+            if page_index is self.MENU_POS:
+                lcd_message += self.format_lat_long(
+                    packet.get('latitude', 0.),
+                    packet.get('longitude', 0.)
+                )
+            elif page_index is self.MENU_CMT:
+                lcd_message += packet.get('comment', '')[0:16]
+            elif page_index is self.MENU_SPD:
+                lcd_message += self.format_speed_course(
+                    packet.get('speed', 0.),
+                    packet.get('course', 0.)
+                )
+            elif page_index is self.MENU_PATH:
+                lcd_message += self.format_path(packet.get('path', ''))
+        elif menu_type is self.MENU_TYPE_INFO:
+            lcd_message += "Press UP to\nReset Messages"
         return lcd_message
 
     def format_lat_long(self, lat, long):
@@ -96,20 +106,33 @@ class PacketMenu:
             path_str += re.sub(r'WIDE', r'W', path_node)
         return path_str[0:16]
 
-    def update_indexes(self, button_num, packet_len):
-        if packet_len is 0: # Bail out
+    def update_indexes(self, button_num, packets):
+        if button_num is self.LCD_UP and self.menu_index is self.MENU_TYPE_INFO:
+            # TODO: Reset the cache, blow away past packets
+            pass
+
+        if button_num is self.LCD_SELECT:
+            self.menu_index = (self.menu_index + 1) % len(self.MENU_TYPES)
+
+        if len(packets) is 0: # Empty list of packets, can't update indexes
             return
 
         if button_num is self.LCD_UP:
-            self.packet_index = (self.packet_index + 1) % packet_len
+            self.packet_index = (self.packet_index + 1) % len(packets)
         elif button_num is self.LCD_DOWN:
-            self.packet_index = (self.packet_index - 1) % packet_len
+            self.packet_index = (self.packet_index - 1) % len(packets)
         elif button_num is self.LCD_RIGHT:
             self.page_index = (self.page_index + 1) % len(self.SCREEN_TYPES)
         elif button_num is self.LCD_LEFT:
             self.page_index = (self.page_index - 1) % len(self.SCREEN_TYPES)
 
-        return (self.packet_index, self.page_index)
+    def update_position(self, gps_position):
+        self.gps_position = gps_position
+
+    def get_position(self):
+        current_position = self.gps_position
+        # TODO: Do some parsing and error checking for bad location values
+        return self.gps_position
 
     def get_button(self, lcd):
         button_num = None
